@@ -91,7 +91,7 @@ const fetchCategory = async (page = 1) => {
         const token = authStore.token;
 
         const response = await $fetch<any>(
-            `http://localhost:5000/api/subcategories/${cat_id}/subcategory`,
+            `http://65.21.153.43:5000/api/subcategories/${cat_id}/subcategory`,
             {
                 method: 'GET',
                 headers: {
@@ -120,7 +120,7 @@ const searchFAQs = async (page = 1) => {
         const subcategoryId = route.params._id;
 
         const response = await $fetch<{ faqs: any[], totalPages: number, currentPage: number }>(
-            `http://localhost:5000/api/search`,
+            `http://65.21.153.43:5000/api/search`,
             {
                 method: 'GET',
                 headers: {

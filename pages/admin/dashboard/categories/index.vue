@@ -98,7 +98,7 @@ const limit = 10;
 const fetchCategories = async (page = 1) => {
     try {
         const token = authStore.token;
-        const response = await $fetch<{ categories: any[], totalPages: number, currentPage: number }>('http://localhost:5000/api/categories', {
+        const response = await $fetch<{ categories: any[], totalPages: number, currentPage: number }>('http://65.21.153.43:5000/api/categories', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -122,7 +122,7 @@ const createCategory = async () => {
 
     try {
         const token = authStore.token;
-        await $fetch('http://localhost:5000/api/categories', {
+        await $fetch('http://65.21.153.43:5000/api/categories', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ const createCategory = async () => {
 const deleteCategory = async (categoryId: string) => {
     try {
         const token = authStore.token;
-        await $fetch(`http://localhost:5000/api/categories/${categoryId}`, {
+        await $fetch(`http://65.21.153.43:5000/api/categories/${categoryId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,

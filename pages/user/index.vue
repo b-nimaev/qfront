@@ -45,7 +45,7 @@ const fetchCategories = async () => {
             }[],
             totalPages: number,
             currentPage: number
-        }>('http://localhost:5000/api/categories');
+        }>('http://65.21.153.43:5000/api/categories');
         categories.value = response.categories;
         console.log(response)
     } catch (error) {

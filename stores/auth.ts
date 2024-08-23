@@ -33,7 +33,7 @@ export const useAuthStore = defineStore("auth", {
       this.errorMessage = "";
       try {
         const response = await $fetch<{ token: string; user: User }>(
-          "http://localhost:5000/api/auth/login",
+          "http://65.21.153.43:5000/api/auth/login",
           {
             method: "POST",
             body: { username, password },
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore("auth", {
       this.status = "loading";
       try {
         // Выполняем запрос на сервер для логаута
-        await $fetch("http://localhost:5000/api/auth/logout", {
+        await $fetch("http://65.21.153.43:5000/api/auth/logout", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -111,7 +111,7 @@ export const useAuthStore = defineStore("auth", {
       if (token) {
         try {
           const response = await $fetch<{ user: User }>(
-            "http://localhost:5000/api/auth/check-auth",
+            "http://65.21.153.43:5000/api/auth/check-auth",
             {
               method: "GET",
               headers: {

@@ -100,7 +100,7 @@ const fetchSubcategories = async (page = 1) => {
         const categoryId = route.params._id;
         console.log(`Подтягивание категории ${categoryId}`)
 
-        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`http://localhost:5000/api/categories/${categoryId}/subcategories`, {
+        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`http://65.21.153.43:5000/api/categories/${categoryId}/subcategories`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ const createSubcategory = async () => {
     try {
         const token = authStore.token;
         const categoryId = route.params._id;
-        await $fetch(`http://localhost:5000/api/categories/${categoryId}/subcategories`, {
+        await $fetch(`http://65.21.153.43:5000/api/categories/${categoryId}/subcategories`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -155,7 +155,7 @@ const deleteSubcategory = async (subcategoryId: string) => {
     try {
         const token = authStore.token;
         const categoryId = route.params._id;
-        await $fetch(`http://localhost:5000/api/categories/${categoryId}/subcategories/${subcategoryId}`, {
+        await $fetch(`http://65.21.153.43:5000/api/categories/${categoryId}/subcategories/${subcategoryId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,

@@ -82,7 +82,7 @@ const fetchSubcategories = async (page = 1) => {
         const categoryId = route.params._id;
         console.log(`Подтягивание категории ${categoryId}`)
 
-        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`http://localhost:5000/api/subcategories/${categoryId}/subcategories`, {
+        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`http://65.21.153.43:5000/api/subcategories/${categoryId}/subcategories`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,

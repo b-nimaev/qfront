@@ -102,7 +102,7 @@ const fetchFAQs = async (page = 1) => {
         const subcategoryId = route.params._id;
 
         const response = await $fetch<{ faqs: any[], totalPages: number, currentPage: number, subcategoryData: { name: string, category: string }, categoryData: { _id: string; name: string; } }>(
-            `http://localhost:5000/api/faqs/${subcategoryId}`,
+            `http://65.21.153.43:5000/api/faqs/${subcategoryId}`,
             {
                 method: 'GET',
                 headers: {
@@ -133,7 +133,7 @@ const createFAQ = async () => {
         const token = authStore.token;
         const subcategoryId = route.params._id;
 
-        await $fetch(`http://localhost:5000/api/faqs`, {
+        await $fetch(`http://65.21.153.43:5000/api/faqs`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -163,7 +163,7 @@ const deleteFAQ = async (faqId: string) => {
     try {
         const token = authStore.token;
 
-        await $fetch(`http://localhost:5000/api/faqs/${faqId}`, {
+        await $fetch(`http://65.21.153.43:5000/api/faqs/${faqId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,

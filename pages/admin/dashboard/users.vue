@@ -140,7 +140,7 @@ const create_user = async () => {
         const expirationDateTime = new Date(`${date.value}T${time.value}`);
         const durationInSeconds = Math.floor((expirationDateTime.getTime() - Date.now()) / 1000);
 
-        await $fetch('http://localhost:5000/api/users/register', {
+        await $fetch('http://65.21.153.43:5000/api/users/register', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -173,7 +173,7 @@ const create_user = async () => {
 const fetchUsers = async (page = 1) => {
     try {
         const token = authStore.token;
-        const response = await $fetch<{ users: any[], totalPages: number, currentPage: number }>('http://localhost:5000/api/users/users', {
+        const response = await $fetch<{ users: any[], totalPages: number, currentPage: number }>('http://65.21.153.43:5000/api/users/users', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,

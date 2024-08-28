@@ -22,7 +22,7 @@ const limit = 10;
 const fetchCategories = async (page = 1) => {
     try {
         const token = authStore.token;
-        const response = await $fetch<{ categories: any[], totalPages: number, currentPage: number }>('http://65.21.153.43:5000/api/categories', {
+        const response = await $fetch<{ categories: any[], totalPages: number, currentPage: number }>('https://tt88.ru/backendapi/categories', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,

@@ -91,7 +91,7 @@ const fetchCategory = async (page = 1) => {
         const token = authStore.token;
 
         const response = await $fetch<any>(
-            `http://65.21.153.43:5000/api/subcategories/${cat_id}/subcategory`,
+            `https://tt88.ru/backendapi/subcategories/${cat_id}/subcategory`,
             {
                 method: 'GET',
                 headers: {
@@ -118,9 +118,9 @@ const searchFAQs = async (page = 1) => {
     try {
         const token = authStore.token;
         const subcategoryId = route.params._id;
-
+        await authStore.checkAuth()
         const response = await $fetch<{ faqs: any[], totalPages: number, currentPage: number }>(
-            `http://65.21.153.43:5000/api/search`,
+            `https://tt88.ru/backendapi/search`,
             {
                 method: 'GET',
                 headers: {

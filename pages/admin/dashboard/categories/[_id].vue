@@ -3,7 +3,16 @@
         <h5>Категория: {{ categoryName }}</h5>
         <hr>
 
-        <h4>Добавление подкатегории</h4>
+        <button class="btn btn-primary btn-sm" @click="editCategory = true">Изменить название</button>
+
+        <div v-if="editCategory">
+            <input v-model="newCategoryName" type="text" class="form-control mt-2"
+                placeholder="Новое название категории">
+            <button class="btn btn-primary mt-2" @click="updateCategory" style="margin-right: 10px;">Сохранить</button>
+            <button class="btn btn-secondary mt-2" @click="cancelEdit">Отмена</button>
+        </div>
+
+        <h4 class="mt-3">Добавление подкатегории</h4>
         <!-- Форма для добавления новой субкатегории -->
         <form @submit.prevent="createSubcategory">
             <div class="mb-3">
@@ -29,7 +38,10 @@
             </thead>
             <tbody>
                 <tr v-for="subcategory in subcategories" :key="subcategory._id">
-                    <td><NuxtLink :to="'/admin/dashboard/subcategories/' + subcategory._id">{{ subcategory.name }}</NuxtLink></td>
+                    <td>
+                        <NuxtLink :to="'/admin/dashboard/subcategories/' + subcategory._id">{{ subcategory.name }}
+                        </NuxtLink>
+                    </td>
                     <td>
                         <button class="btn btn-danger btn-sm" @click="deleteSubcategory(subcategory._id)">
                             Удалить
@@ -87,6 +99,8 @@ import { useRoute } from 'vue-router';
 const authStore = useAuthStore();
 const route = useRoute();
 const categoryName = ref('');
+const newCategoryName = ref('');
+const editCategory = ref(false);
 const subcategoryName = ref('');
 const subcategories = ref<any[]>([]);
 const errorMessage = ref<string | null>(null);
@@ -100,7 +114,7 @@ const fetchSubcategories = async (page = 1) => {
         const categoryId = route.params._id;
         console.log(`Подтягивание категории ${categoryId}`)
 
-        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`http://65.21.153.43:5000/api/subcategories/${categoryId}/subcategories`, {
+        const response = await $fetch<{ subcategories: any[], categoryName: string | null, totalPages: number, currentPage: number }>(`https://tt88.ru/backendapi/subcategories/${categoryId}/subcategories`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -128,7 +142,7 @@ const createSubcategory = async () => {
     try {
         const token = authStore.token;
         const categoryId = route.params._id;
-        await $fetch(`http://65.21.153.43:5000/api/subcategories/${categoryId}/subcategories`, {
+        await $fetch(`https://tt88.ru/backendapi/subcategories/${categoryId}/subcategories`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -155,7 +169,9 @@ const deleteSubcategory = async (subcategoryId: string) => {
     try {
         const token = authStore.token;
         const categoryId = route.params._id;
-        await $fetch(`http://65.21.153.43:5000/api/subcategories/${categoryId}/subcategories/${subcategoryId}`, {
+        console.log(`Инициализация удаления подкатегории из категории ${categoryId}`)
+        console.log(`Удаление подкатегории ${subcategoryId}`)
+        await $fetch(`https://tt88.ru/backendapi/subcategories/${categoryId}/subcategories/${subcategoryId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -168,6 +184,32 @@ const deleteSubcategory = async (subcategoryId: string) => {
         errorMessage.value = 'Не удалось удалить субкатегорию. Попробуйте позже.';
     }
 }
+
+const updateCategory = async () => {
+    try {
+        const token = authStore.token;
+        const categoryId = route.params._id;
+        await $fetch(`https://tt88.ru/backendapi/categories/${categoryId}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: newCategoryName.value }),
+        });
+
+        categoryName.value = newCategoryName.value;
+        editCategory.value = false;
+    } catch (error) {
+        console.error('Ошибка при обновлении категории:', error);
+        errorMessage.value = 'Не удалось обновить категорию. Попробуйте позже.';
+    }
+};
+
+const cancelEdit = () => {
+    editCategory.value = false;
+    newCategoryName.value = categoryName.value; // Reset the input field
+};
 
 const changePage = (page: number) => {
     if (page > 0 && page <= totalPages.value) {
@@ -209,7 +251,9 @@ const paginationPages = computed(() => {
     return pages;
 });
 
-onMounted(() => {
-    fetchSubcategories();
+onBeforeMount(async () => {
+    await authStore.checkAuth()
+    await fetchSubcategories();
+    newCategoryName.value = categoryName.value; // Initialize the new category name
 });
 </script>

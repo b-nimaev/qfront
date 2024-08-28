@@ -1,9 +1,19 @@
 <template>
     <div>
-        <h6>Категория: <NuxtLink :to="'/admin/dashboard/categories/' + categoryName._id">{{ categoryName.name }}</NuxtLink> - {{ subcategoryName }}</h6>
+        <h6>Категория: <NuxtLink :to="'/admin/dashboard/categories/' + categoryName._id">{{ categoryName.name }}
+            </NuxtLink> - {{ subcategoryName }}</h6>
+
+        <button class="btn btn-primary btn-sm" @click="editCategory = true">Изменить название</button>
+
+        <div v-if="editCategory">
+            <input v-model="newCategoryName" type="text" class="form-control mt-2"
+                placeholder="Новое название категории">
+            <button class="btn btn-primary mt-2" @click="updateCategory" style="margin-right: 10px;">Сохранить</button>
+            <button class="btn btn-secondary mt-2" @click="cancelEdit">Отмена</button>
+        </div>
 
         <!-- Форма для добавления нового FAQ -->
-         <h5>Добавление FAQ</h5>
+        <h4 class="mt-3">Добавление FAQ</h4>
         <form @submit.prevent="createFAQ">
             <div class="mb-3">
                 <label for="question" class="form-label">Вопрос</label>
@@ -80,7 +90,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRoute } from 'vue-router';
-
+const newCategoryName = ref('');
+const editCategory = ref(false);
 const authStore = useAuthStore();
 const route = useRoute();
 const subcategoryName = ref('');
@@ -102,7 +113,7 @@ const fetchFAQs = async (page = 1) => {
         const subcategoryId = route.params._id;
 
         const response = await $fetch<{ faqs: any[], totalPages: number, currentPage: number, subcategoryData: { name: string, category: string }, categoryData: { _id: string; name: string; } }>(
-            `http://65.21.153.43:5000/api/faqs/${subcategoryId}`,
+            `https://tt88.ru/backendapi/faqs/${subcategoryId}`,
             {
                 method: 'GET',
                 headers: {
@@ -133,7 +144,7 @@ const createFAQ = async () => {
         const token = authStore.token;
         const subcategoryId = route.params._id;
 
-        await $fetch(`http://65.21.153.43:5000/api/faqs`, {
+        await $fetch(`https://tt88.ru/backendapi/faqs`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -163,7 +174,7 @@ const deleteFAQ = async (faqId: string) => {
     try {
         const token = authStore.token;
 
-        await $fetch(`http://65.21.153.43:5000/api/faqs/${faqId}`, {
+        await $fetch(`https://tt88.ru/backendapi/faqs/${faqId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -175,6 +186,32 @@ const deleteFAQ = async (faqId: string) => {
         console.error('Ошибка при удалении FAQ:', error);
         errorMessage.value = 'Не удалось удалить FAQ. Попробуйте позже.';
     }
+};
+
+const updateCategory = async () => {
+    try {
+        const token = authStore.token;
+        const categoryId = route.params._id;
+        await $fetch(`https://tt88.ru/backendapi/subcategories/${route.params._id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: newCategoryName.value }),
+        });
+
+        subcategoryName.value = newCategoryName.value;
+        editCategory.value = false;
+    } catch (error) {
+        console.error('Ошибка при обновлении категории:', error);
+        errorMessage.value = 'Не удалось обновить категорию. Попробуйте позже.';
+    }
+};
+
+const cancelEdit = () => {
+    editCategory.value = false;
+    newCategoryName.value = subcategoryName.value; // Reset the input field
 };
 
 const changePage = (page: number) => {

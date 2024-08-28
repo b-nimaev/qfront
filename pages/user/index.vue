@@ -45,7 +45,7 @@ const fetchCategories = async () => {
             }[],
             totalPages: number,
             currentPage: number
-        }>('http://65.21.153.43:5000/api/categories');
+        }>('https://tt88.ru/backendapi/categories');
         categories.value = response.categories;
         console.log(response)
     } catch (error) {

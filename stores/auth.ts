@@ -33,12 +33,14 @@ export const useAuthStore = defineStore("auth", {
       this.errorMessage = "";
       try {
         const response = await $fetch<{ token: string; user: User }>(
-          "http://65.21.153.43:5000/api/auth/login",
+          "https://tt88.ru/backendapi/auth/login",
           {
             method: "POST",
             body: { username, password },
           }
         );
+
+        console.log(response)
 
         this.user = response.user;
         this.token = response.token;
@@ -50,7 +52,7 @@ export const useAuthStore = defineStore("auth", {
         this.status = "success";
 
         if (this.user?.role === "admin") {
-          navigateTo("/admin");
+          navigateTo("/admin/dashboard");
         } else {
           navigateTo("/user");
         }
@@ -79,7 +81,7 @@ export const useAuthStore = defineStore("auth", {
       this.status = "loading";
       try {
         // Выполняем запрос на сервер для логаута
-        await $fetch("http://65.21.153.43:5000/api/auth/logout", {
+        await $fetch("https://tt88.ru/backendapi/auth/logout", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -97,9 +99,12 @@ export const useAuthStore = defineStore("auth", {
 
         navigateTo("/");
       } catch (error: any) {
+        this.token = ""
+        useCookie("auth_token").value = null
         this.status = "error";
         this.errorMessage =
           "Logout failed: " + (error.message || "Unknown error");
+          navigateTo("/")
       }
     },
 
@@ -111,7 +116,7 @@ export const useAuthStore = defineStore("auth", {
       if (token) {
         try {
           const response = await $fetch<{ user: User }>(
-            "http://65.21.153.43:5000/api/auth/check-auth",
+            "https://tt88.ru/backendapi/auth/check-auth",
             {
               method: "GET",
               headers: {
